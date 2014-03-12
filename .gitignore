@@ -1,8 +1,8 @@
 .metadata/
 dvt/
-DPD/.launches
-DPD/.settings
-DPD/Debug
+CORDIC/.launches
+CORDIC/.settings
+CORDIC/Debug
 
 .ccsproject
 .cproject
