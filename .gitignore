@@ -7,5 +7,5 @@ DPD/Debug
 .ccsproject
 .cproject
 .project
-C6416
+*.cmd
 *.ccxml
