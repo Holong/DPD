@@ -11,3 +11,4 @@ CORDIC/Debug
 *.ccxml
 Makefile
 *.swp
+tags
