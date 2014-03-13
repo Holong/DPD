@@ -9,3 +9,5 @@ CORDIC/Debug
 .project
 *.cmd
 *.ccxml
+Makefile
+*.swp
