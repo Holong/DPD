@@ -1,0 +1,24 @@
+#define PI			3.141592
+#define TEST_VECTOR_LENGTH	100
+
+struct rect {
+	double x;
+	double y;
+};
+
+struct polar {
+	double length;
+	double angle;
+	double radian;
+};
+
+struct rect test_vector_for_sqrt[TEST_VECTOR_LENGTH];
+struct polar test_vector_for_tri[TEST_VECTOR_LENGTH];
+
+double float_answer_vector_for_sqrt[TEST_VECTOR_LENGTH];
+double float_answer_vector_for_cos[TEST_VECTOR_LENGTH];
+double float_answer_vector_for_sin[TEST_VECTOR_LENGTH];
+
+double CORDIC_answer_vector_for_sqrt[TEST_VECTOR_LENGTH];
+double CORDIC_answer_vector_for_cos[TEST_VECTOR_LENGTH];
+double CORDIC_answer_vector_for_sin[TEST_VECTOR_LENGTH];
