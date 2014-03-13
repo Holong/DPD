@@ -10,10 +10,10 @@ int main(void) {
 	int i;
 	
 	printf("Print CORDIC angle table\n");
-	printf("[index   tangent      angle ]\n");
+	printf("[index   tangent      radian ]\n");
 	for(i = 0; i < TABLE_LENGTH; i++)
 	{
-		printf("[%2d : %10lf, %10lf]\n", rotation_table[i].index, rotation_table[i].tangent, rotation_table[i].angle);
+		printf("[%2d : %10lf, %10lf]\n", rotation_table[i].index, rotation_table[i].tangent, rotation_table[i].radian);
 	}
 
 	printf("========= Make Input Vectors ==========\n");
@@ -32,18 +32,12 @@ int main(void) {
 
 	for(i = 0; i < TEST_VECTOR_LENGTH; i++)
 	{
-		double num = rand()%100 + 1;
-		double denom = rand()%10 + 1;
-		double length = num/denom;
-
 		int angle_int = rand()%360;
 		double angle_deci = rand()%100 * 0.01;
 
 		double angle = (double)angle_int + angle_deci;
 
-		test_vector_for_tri[i].length = length;
-		test_vector_for_tri[i].angle = angle;
-		test_vector_for_tri[i].radian = angle * 180 / PI;
+		test_vector_for_tri[i] = angle * PI / 180 ;
 	}
 
 	printf("========= Make ans_vectors for comparison ============\n");
@@ -53,18 +47,19 @@ int main(void) {
 		double yy = pow(test_vector_for_sqrt[i].y, 2);
 
 		float_answer_vector_for_sqrt[i] = sqrt(xx + yy);
-		float_answer_vector_for_cos[i] = cos(test_vector_for_tri[i].radian);
-		float_answer_vector_for_sin[i] = sin(test_vector_for_tri[i].radian);
+		float_answer_vector_for_cos[i] = cos(test_vector_for_tri[i]);
+		float_answer_vector_for_sin[i] = sin(test_vector_for_tri[i]);
 	}
-	
+/*	
 	printf("========= Test square root ===========\n");
 	for(i = 0; i < TEST_VECTOR_LENGTH; i++)
 	{
 		CORDIC_answer_vector_for_sqrt[i] = CORDIC_sqrt(test_vector_for_sqrt[i].x, test_vector_for_sqrt[i].y);
-		CORDIC_answer_vector_for_cos[i] = CORDIC_cos(test_vector_for_tri[i].radian);
-		CORDIC_answer_vector_for_sin[i] = CORDIC_sin(test_vector_for_tri[i].radian);
+		CORDIC_answer_vector_for_cos[i] = CORDIC_cos(test_vector_for_tri[i]);
+		CORDIC_answer_vector_for_sin[i] = CORDIC_sin(test_vector_for_tri[i]);
 	}
 
+*/
 	
 	return 0;
 }
