@@ -5,10 +5,12 @@
 
 #include "lookup.h"
 #include "input.h"
+#include "cordic.h"
 
 int main(void) {
 	int i;
-	
+	int precision;
+
 	printf("Print CORDIC angle table\n");
 	printf("[index   tangent      radian ]\n");
 	for(i = 0; i < TABLE_LENGTH; i++)
@@ -46,17 +48,22 @@ int main(void) {
 		double xx = pow(test_vector_for_sqrt[i].x, 2);
 		double yy = pow(test_vector_for_sqrt[i].y, 2);
 
-		float_answer_vector_for_sqrt[i] = sqrt(xx + yy);
-		float_answer_vector_for_cos[i] = cos(test_vector_for_tri[i]);
-		float_answer_vector_for_sin[i] = sin(test_vector_for_tri[i]);
+		answer_vector_for_sqrt[i] = sqrt(xx + yy);
+		answer_vector_for_cos[i] = cos(test_vector_for_tri[i]);
+		answer_vector_for_sin[i] = sin(test_vector_for_tri[i]);
 	}
+
+	printf("========== Set a precision for cal ================\n");
+	printf("Wanted precision : ");
+	scanf("%d", &precision);
+
 /*	
 	printf("========= Test square root ===========\n");
 	for(i = 0; i < TEST_VECTOR_LENGTH; i++)
 	{
-		CORDIC_answer_vector_for_sqrt[i] = CORDIC_sqrt(test_vector_for_sqrt[i].x, test_vector_for_sqrt[i].y);
-		CORDIC_answer_vector_for_cos[i] = CORDIC_cos(test_vector_for_tri[i]);
-		CORDIC_answer_vector_for_sin[i] = CORDIC_sin(test_vector_for_tri[i]);
+		CORDIC_answer_vector_for_sqrt[i] = CORDIC_sqrt_float(test_vector_for_sqrt[i].x, test_vector_for_sqrt[i].y, precision);
+		CORDIC_answer_vector_for_cos[i] = CORDIC_cos_float(test_vector_for_tri[i], precision);
+		CORDIC_answer_vector_for_sin[i] = CORDIC_sin_float(test_vector_for_tri[i], precision);
 	}
 
 */
@@ -72,9 +79,9 @@ int main(void) {
 
 		for(i = 0; i < TEST_VECTOR_LENGTH; i++)
 		{
-			sum_for_sqrt += pow(float_answer_vector_for_sqrt[i] - CORDIC_answer_vector_for_sqrt[i], 2);
-			sum_for_cos += pow(float_answer_vector_for_cos[i] - CORDIC_answer_vector_for_cos[i], 2);
-			sum_for_sin += pow(float_answer_vector_for_sin[i] - CORDIC_answer_vector_for_sin[i], 2);
+			sum_for_sqrt += pow(answer_vector_for_sqrt[i] - CORDIC_answer_vector_for_sqrt[i], 2);
+			sum_for_cos += pow(answer_vector_for_cos[i] - CORDIC_answer_vector_for_cos[i], 2);
+			sum_for_sin += pow(answer_vector_for_sin[i] - CORDIC_answer_vector_for_sin[i], 2);
 		}
 
 		std_sqrt = sqrt(sum_for_sqrt/TEST_VECTOR_LENGTH);
