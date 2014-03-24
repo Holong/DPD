@@ -1,18 +1,13 @@
 #include "fixed.h"
+#include "lookup.h"
 
-#define CORDIC_cos_float(theta, precision)	CORDIC_tri_float(theta, precision, CORDIC_cos)
-#define CORDIC_sin_float(theta, precision)	CORDIC_tri_float(theta, precision, CORDIC_sin)
-
-#define CORDIC_cos(theta, precision)		CORDIC_cos_sin(theta, precision, 0)
-#define CORDIC_sin(theta, precision)		CORDIC_cos_sin(theta, precision, 1)
-
-FIXED CORDIC_sqrt(FIXED x, FIXED y, int precision);
+//FIXED CORDIC_sqrt(FIXED x, FIXED y, int precision);
 
 struct point {
 	FIXED x;
 	FIXED y;
 	FIXED z;
-}
+};
 
 typedef enum __type {
 	CIRCULAR,
@@ -35,7 +30,7 @@ int select_direction(mode cal_mode, struct point pt)
 		else
 			d = -1;
 	else
-		if((int)pt.z > 0 && (int)pt.y > 0 || (int)pt.z < 0 && (int)pt.y < 0)
+		if(((int)pt.z > 0 && (int)pt.y > 0) || ((int)pt.z < 0 && (int)pt.y < 0))
 			d = -1;
 		else
 			d = 1;
@@ -51,7 +46,7 @@ struct point cal_circular(struct point p0, mode cal_mode, int iterations)
 	int i;
 	int d;
 	
-	for(i = 0; i < iterations, i++) {
+	for(i = 0; i < iterations; i++) {
 		
 		pt0 = pt1;
 		d = select_direction(cal_mode, pt0);
@@ -78,7 +73,7 @@ struct point cal_linear(struct point p0, mode cal_mode, int iterations)
 	int i;
 	int d;
 	
-	for(i = 0; i < iterations, i++) {
+	for(i = 0; i < iterations; i++) {
 
 		pt0 = pt1;
 		d = select_direction(cal_mode, pt0);
@@ -105,7 +100,7 @@ struct point cal_hyperbolic(struct point p0, mode cal_mode, int iterations)
 	int i;
 	int d;
 
-	for(i = 0; i < iterations, i++) {
+	for(i = 0; i < iterations; i++) {
 		
 		pt0 = pt1;
 		d = select_direction(cal_mode, pt0);
@@ -128,8 +123,6 @@ struct point cal_hyperbolic(struct point p0, mode cal_mode, int iterations)
 struct point generalized_cordic(struct point p0, type cal_type,
 		mode cal_mode, int precision)
 {	
-	int u;
-	int i;
 	struct point result;
 
 	switch(cal_type) {
@@ -169,16 +162,16 @@ double CORDIC_sqrt_float(double x, double y, int precision)
 	FIXED x_fix = float_to_fixed(x, precision);
 	FIXED y_fix = float_to_fixed(y, precision);
 
-	FIXED ret_value = CORDIC_sqrt(x_fix, y_fix, precisio);
+	FIXED ret_value = 0; //CORDIC_sqrt(x_fix, y_fix, precisio);
 
 	return fixed_to_float(ret_value, precision);
 }
 	
-double CORDIC_tri_float(double theta, int precision, FIXED (*func)(FIXED, int))
+double CORDIC_tri_float(double theta, int precision, int sel)
 {
 	FIXED theta_fix = float_to_fixed(theta, precision);
 
-	FIXED ret_value = func(theta_fix, precision);
+	FIXED ret_value = CORDIC_cos_sin(theta_fix, precision, sel);
 
 	return fixed_to_float(ret_value, precision);
 }

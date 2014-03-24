@@ -1,3 +1,6 @@
+#ifndef __LOOKUP_H__
+#define __LOOKUP_H__
+
 #define	TABLE_LENGTH		10
 #define K			1.646760258121
 #define INV_K			0.607252935008
@@ -49,3 +52,5 @@ struct rotation_info hyperbolic_table[TABLE_LENGTH] = {
 	{8,	0.00390625,	0.2238105,	0.00390623},
 	{9,	0.001953125,	0.111905677,	0.00195312}
 };
+
+#endif
