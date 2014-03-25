@@ -45,6 +45,7 @@ struct point cal_circular(struct point p0, mode cal_mode, int iterations)
 	struct point pt1 = p0;
 	int i;
 	int d;
+	FIXED temp_z;
 	
 	for(i = 0; i < iterations; i++) {
 		
@@ -52,14 +53,16 @@ struct point cal_circular(struct point p0, mode cal_mode, int iterations)
 		d = select_direction(cal_mode, pt0);
 		
 		if(d > 0) {
-			pt1.x = pt0.x - (pt0.y >> 1);
-			pt1.y = pt0.y + (pt0.x >> 1);
-			pt1.z = pt0.z - circular_table[i].radian;
+			pt1.x = pt0.x - (pt0.y >> i);
+			pt1.y = pt0.y + (pt0.x >> i);
+			temp_z = float_to_fixed(circular_table[i].radian, iterations);
+			pt1.z = pt0.z - temp_z;
 		}
 		else {
-			pt1.x = pt0.x + (pt0.y >> 1);
-			pt1.y = pt0.y - (pt0.x >> 1);
-			pt1.z = pt0.z + circular_table[i].radian;
+			pt1.x = pt0.x + (pt0.y >> i);
+			pt1.y = pt0.y - (pt0.x >> i);
+			temp_z = float_to_fixed(circular_table[i].radian, iterations);
+			pt1.z = pt0.z + temp_z;
 		}
 	}
 
@@ -72,6 +75,7 @@ struct point cal_linear(struct point p0, mode cal_mode, int iterations)
 	struct point pt1 = p0;
 	int i;
 	int d;
+	FIXED temp_z;
 	
 	for(i = 0; i < iterations; i++) {
 
@@ -80,13 +84,15 @@ struct point cal_linear(struct point p0, mode cal_mode, int iterations)
 		
 		if(d > 0) {
 			pt1.x = pt0.x;
-			pt1.y = pt0.y + (pt0.x >> 1);
-			pt1.z = pt0.z - linear_table[i].tangent;
+			pt1.y = pt0.y + (pt0.x >> i);
+			temp_z = float_to_fixed(linear_table[i].tangent, iterations);
+			pt1.z = pt0.z - temp_z;
 		}
 		else {
 			pt1.x = pt0.x;
-			pt1.y = pt0.y - (pt0.x >> 1);
-			pt1.z = pt0.z + linear_table[i].tangent;
+			pt1.y = pt0.y - (pt0.x >> i);
+			temp_z = float_to_fixed(linear_table[i].tangent, iterations);
+			pt1.z = pt0.z + temp_z;
 		}
 	}
 
@@ -99,6 +105,7 @@ struct point cal_hyperbolic(struct point p0, mode cal_mode, int iterations)
 	struct point pt1 = p0;
 	int i;
 	int d;
+	FIXED temp_z;
 
 	for(i = 0; i < iterations; i++) {
 		
@@ -106,14 +113,16 @@ struct point cal_hyperbolic(struct point p0, mode cal_mode, int iterations)
 		d = select_direction(cal_mode, pt0);
 		
 		if(d > 0) {
-			pt1.x = pt0.x + (pt0.y >> 1);
-			pt1.y = pt0.y + (pt0.x >> 1);
-			pt1.z = pt0.z - hyperbolic_table[i].radian;
+			pt1.x = pt0.x + (pt0.y >> i);
+			pt1.y = pt0.y + (pt0.x >> i);
+			temp_z = float_to_fixed(hyperbolic_table[i].radian, iterations);
+			pt1.z = pt0.z - temp_z;
 		}
 		else {
-			pt1.x = pt0.x + (pt0.y >> 1);
-			pt1.y = pt0.y + (pt0.x >> 1);
-			pt1.z = pt0.z + hyperbolic_table[i].radian;
+			pt1.x = pt0.x + (pt0.y >> i);
+			pt1.y = pt0.y + (pt0.x >> i);
+			temp_z = float_to_fixed(hyperbolic_table[i].radian, iterations);
+			pt1.z = pt0.z + temp_z;
 		}
 	}
 
