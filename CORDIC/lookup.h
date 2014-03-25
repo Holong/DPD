@@ -3,7 +3,7 @@
 
 #include "fixed.h"
 
-#define	TABLE_LENGTH		10
+#define	TABLE_LENGTH		31
 #define K			1.646760258121
 #define INV_K			0.607252935008
 #define PRI_K			0.828159360960
