@@ -20,6 +20,10 @@ typedef enum __mode {
 	VECTORING
 } mode;
 
+extern struct lookup_info_fixed circular_table_fixed[TABLE_LENGTH];
+extern struct lookup_info_fixed linear_table_fixed[TABLE_LENGTH];
+extern struct lookup_info_fixed hyperbolic_table_fixed[TABLE_LENGTH];
+
 int select_direction(mode cal_mode, struct point pt)
 {
 	int d;
@@ -45,8 +49,6 @@ struct point cal_circular(struct point p0, mode cal_mode, int iterations)
 	struct point pt1 = p0;
 	int i;
 	int d;
-	FIXED temp_z;
-	
 	for(i = 0; i < iterations; i++) {
 		
 		pt0 = pt1;
@@ -55,14 +57,12 @@ struct point cal_circular(struct point p0, mode cal_mode, int iterations)
 		if(d > 0) {
 			pt1.x = pt0.x - (pt0.y >> i);
 			pt1.y = pt0.y + (pt0.x >> i);
-			temp_z = float_to_fixed(circular_table[i].radian, iterations);
-			pt1.z = pt0.z - temp_z;
+			pt1.z = pt0.z - circular_table_fixed[i].radian;
 		}
 		else {
 			pt1.x = pt0.x + (pt0.y >> i);
 			pt1.y = pt0.y - (pt0.x >> i);
-			temp_z = float_to_fixed(circular_table[i].radian, iterations);
-			pt1.z = pt0.z + temp_z;
+			pt1.z = pt0.z + circular_table_fixed[i].radian;
 		}
 	}
 
@@ -75,7 +75,6 @@ struct point cal_linear(struct point p0, mode cal_mode, int iterations)
 	struct point pt1 = p0;
 	int i;
 	int d;
-	FIXED temp_z;
 	
 	for(i = 0; i < iterations; i++) {
 
@@ -85,14 +84,12 @@ struct point cal_linear(struct point p0, mode cal_mode, int iterations)
 		if(d > 0) {
 			pt1.x = pt0.x;
 			pt1.y = pt0.y + (pt0.x >> i);
-			temp_z = float_to_fixed(linear_table[i].tangent, iterations);
-			pt1.z = pt0.z - temp_z;
+			pt1.z = pt0.z - linear_table_fixed[i].tangent;
 		}
 		else {
 			pt1.x = pt0.x;
 			pt1.y = pt0.y - (pt0.x >> i);
-			temp_z = float_to_fixed(linear_table[i].tangent, iterations);
-			pt1.z = pt0.z + temp_z;
+			pt1.z = pt0.z + linear_table_fixed[i].tangent;
 		}
 	}
 
@@ -105,7 +102,6 @@ struct point cal_hyperbolic(struct point p0, mode cal_mode, int iterations)
 	struct point pt1 = p0;
 	int i;
 	int d;
-	FIXED temp_z;
 
 	for(i = 0; i < iterations; i++) {
 		
@@ -115,14 +111,12 @@ struct point cal_hyperbolic(struct point p0, mode cal_mode, int iterations)
 		if(d > 0) {
 			pt1.x = pt0.x + (pt0.y >> i);
 			pt1.y = pt0.y + (pt0.x >> i);
-			temp_z = float_to_fixed(hyperbolic_table[i].radian, iterations);
-			pt1.z = pt0.z - temp_z;
+			pt1.z = pt0.z - hyperbolic_table_fixed[i].radian;
 		}
 		else {
 			pt1.x = pt0.x + (pt0.y >> i);
 			pt1.y = pt0.y + (pt0.x >> i);
-			temp_z = float_to_fixed(hyperbolic_table[i].radian, iterations);
-			pt1.z = pt0.z + temp_z;
+			pt1.z = pt0.z + hyperbolic_table_fixed[i].radian;
 		}
 	}
 

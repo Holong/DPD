@@ -3,8 +3,53 @@
 #include <time.h>
 #include <math.h>
 
+#include "lookup.h"
 #include "input.h"
 #include "cordic.h"
+#include "fixed.h"
+
+struct rotation_info circular_table[TABLE_LENGTH] = {
+	{0, 	1, 		45,		0.78539816},
+	{1, 	0.5, 		26.56505118,	0.46364760},
+	{2, 	0.25,		14.03624347,	0.24497866},
+	{3,	0.125,		7.125016349,	0.12435499},
+	{4,	0.0625,		3.576334375,	0.06241880},
+	{5,	0.03125,	1.789910608,	0.03123983},
+	{6,	0.015625,	0.89517371,	0.01562372},
+	{7,	0.0078125,	0.447614171,	0.00781234},
+	{8,	0.00390625,	0.2238105,	0.00390623},
+	{9,	0.001953125,	0.111905677,	0.00195312}
+};
+
+struct rotation_info linear_table[TABLE_LENGTH] = {
+	{0, 	1, 		45,		0.78539816},
+	{1, 	0.5, 		26.56505118,	0.46364760},
+	{2, 	0.25,		14.03624347,	0.24497866},
+	{3,	0.125,		7.125016349,	0.12435499},
+	{4,	0.0625,		3.576334375,	0.06241880},
+	{5,	0.03125,	1.789910608,	0.03123983},
+	{6,	0.015625,	0.89517371,	0.01562372},
+	{7,	0.0078125,	0.447614171,	0.00781234},
+	{8,	0.00390625,	0.2238105,	0.00390623},
+	{9,	0.001953125,	0.111905677,	0.00195312}
+};
+
+struct rotation_info hyperbolic_table[TABLE_LENGTH] = {
+	{0, 	1, 		45,		0.78539816},
+	{1, 	0.5, 		26.56505118,	0.46364760},
+	{2, 	0.25,		14.03624347,	0.24497866},
+	{3,	0.125,		7.125016349,	0.12435499},
+	{4,	0.0625,		3.576334375,	0.06241880},
+	{5,	0.03125,	1.789910608,	0.03123983},
+	{6,	0.015625,	0.89517371,	0.01562372},
+	{7,	0.0078125,	0.447614171,	0.00781234},
+	{8,	0.00390625,	0.2238105,	0.00390623},
+	{9,	0.001953125,	0.111905677,	0.00195312}
+};
+
+struct lookup_info_fixed circular_table_fixed[TABLE_LENGTH];
+struct lookup_info_fixed linear_table_fixed[TABLE_LENGTH];
+struct lookup_info_fixed hyperbolic_table_fixed[TABLE_LENGTH];
 
 int main(void) {
 	int i;
@@ -45,9 +90,36 @@ int main(void) {
 		answer_vector_for_sin[i] = sin(test_vector_for_tri[i]);
 	}
 
-	printf("========== Set a precision for cal ================\n");
+	printf("========== Set a precision for cal & translate LUT ================\n");
 	printf("Wanted precision : ");
 	scanf("%d", &precision);
+
+	for(i = 0; i < TABLE_LENGTH; i++) {
+		circular_table_fixed[i].index = circular_table[i].index;
+		circular_table_fixed[i].tangent =
+			float_to_fixed(circular_table[i].tangent, precision);
+		circular_table_fixed[i].angle =
+			float_to_fixed(circular_table[i].angle, precision);
+		circular_table_fixed[i].radian =
+			float_to_fixed(circular_table[i].radian, precision);
+
+		linear_table_fixed[i].index = linear_table[i].index;
+		linear_table_fixed[i].tangent =
+			float_to_fixed(linear_table[i].tangent, precision);
+		linear_table_fixed[i].angle =
+			float_to_fixed(linear_table[i].angle, precision);
+		linear_table_fixed[i].radian =
+			float_to_fixed(linear_table[i].radian, precision);
+		
+		hyperbolic_table_fixed[i].index = hyperbolic_table[i].index;
+		hyperbolic_table_fixed[i].tangent =
+			float_to_fixed(hyperbolic_table[i].tangent, precision);
+		hyperbolic_table_fixed[i].angle =
+			float_to_fixed(hyperbolic_table[i].angle, precision);
+		hyperbolic_table_fixed[i].radian =
+			float_to_fixed(hyperbolic_table[i].radian, precision);
+	}
+		
 
 	printf("========= Test square root ===========\n");
 	for(i = 0; i < TEST_VECTOR_LENGTH; i++)
@@ -59,6 +131,7 @@ int main(void) {
 
 	printf("========= Verify test_vectors ====================\n");
 	{
+		/*
 		double sum_for_sqrt = 0;
 		double sum_for_cos = 0;
 		double sum_for_sin = 0;
@@ -81,6 +154,12 @@ int main(void) {
 		printf("Standard deviation of sqrt : %lf \n", std_sqrt);
 		printf("Standard deviation of cos : %lf \n", std_cos);
 		printf("Standard deviation of sin : %lf \n", std_sin);
+		*/
+
+		for(i = 0; i < TEST_VECTOR_LENGTH; i++)
+		{
+			printf("[%d : %lf]\n", i, answer_vector_for_cos[i] - CORDIC_answer_vector_for_cos[i]);
+		}
 	}
 	
 	return 0;
