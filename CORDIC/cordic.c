@@ -1,7 +1,6 @@
 #include "fixed.h"
 #include "lookup.h"
 
-//FIXED CORDIC_sqrt(FIXED x, FIXED y, int precision);
 
 struct point {
 	FIXED x;
@@ -34,7 +33,7 @@ int select_direction(mode cal_mode, struct point pt)
 		else
 			d = -1;
 	else
-		if(((int)pt.z > 0 && (int)pt.y > 0) || ((int)pt.z < 0 && (int)pt.y < 0))
+		if(((int)pt.x > 0 && (int)pt.y > 0) || ((int)pt.x < 0 && (int)pt.y < 0))
 			d = -1;
 		else
 			d = 1;
@@ -160,12 +159,30 @@ FIXED CORDIC_cos_sin(FIXED theta, int precision, int sel)
 		return result.y;
 }
 
+FIXED CORDIC_sqrt(FIXED x, FIXED y, int precision)
+{
+	struct point pt0;
+	struct point result;
+
+	pt0.x = x;
+	pt0.y = y;
+	pt0.z = 0;
+	result = generalized_cordic(pt0, CIRCULAR, VECTORING, precision);
+
+	pt0.x = result.x;
+	pt0.y = 0;
+	pt0.z = float_to_fixed(INV_K, precision);
+	result = generalized_cordic(pt0, LINEAR, ROTATION, precision);
+
+	return result.y;
+}
+
 double CORDIC_sqrt_float(double x, double y, int precision)
 {
 	FIXED x_fix = float_to_fixed(x, precision);
 	FIXED y_fix = float_to_fixed(y, precision);
 
-	FIXED ret_value = 0; //CORDIC_sqrt(x_fix, y_fix, precisio);
+	FIXED ret_value = CORDIC_sqrt(x_fix, y_fix, precision);
 
 	return fixed_to_float(ret_value, precision);
 }

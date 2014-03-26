@@ -114,37 +114,37 @@ struct lookup_info_fixed circular_table_fixed[TABLE_LENGTH];
 struct lookup_info_fixed linear_table_fixed[TABLE_LENGTH];
 struct lookup_info_fixed hyperbolic_table_fixed[TABLE_LENGTH];
 
-int main(void) {
+int main(int argc, char* argv[]) {
 	int i;
 	int precision;
 
-	printf("========= Make Input Vectors ==========\n");
+	printf(" Make Input Vectors ................................. ");
 	srand((int)time(NULL));
-	for(i = 0; i < TEST_VECTOR_LENGTH*2; i++)
-	{
-		double num = rand()%100 + 1;
-		double denom = rand()%10 + 1;
-		double value = num/denom;
+	for(i = 0; i < TEST_VECTOR_LENGTH*2; i++) {
+		double integer = rand()%10;
+		double fraction = rand()%10000;
+		double value = integer + fraction/10000;
 		
 		if(i%2)
 			test_vector_for_sqrt[i/2].x = value;
 		else
 			test_vector_for_sqrt[i/2].y = value;
 	}
-
-	for(i = 0; i < TEST_VECTOR_LENGTH; i++)
-	{
+	for(i = 0; i < TEST_VECTOR_LENGTH; i++)	{
 		int angle_int = rand()%90;
 		double angle_deci = rand()%100 * 0.01;
 
 		double angle = (double)angle_int + angle_deci;
-
-		test_vector_for_tri[i] = angle * PI / 180 ;
+		
+		if(i % 2 == 0)
+			test_vector_for_tri[i] = angle * PI / 180 ;
+		else
+			test_vector_for_tri[i] = -1 * angle * PI / 180;
 	}
+	printf("[Pass]\n");
 
-	printf("========= Make ans_vectors for comparison ============\n");
-	for(i = 0; i < TEST_VECTOR_LENGTH; i++)
-	{
+	printf(" Make ans_vectors for comparison .................... ");
+	for(i = 0; i < TEST_VECTOR_LENGTH; i++)	{
 		double xx = pow(test_vector_for_sqrt[i].x, 2);
 		double yy = pow(test_vector_for_sqrt[i].y, 2);
 
@@ -152,47 +152,54 @@ int main(void) {
 		answer_vector_for_cos[i] = cos(test_vector_for_tri[i]);
 		answer_vector_for_sin[i] = sin(test_vector_for_tri[i]);
 	}
+	printf("[Pass]\n");
 
-	printf("========== Set a precision for cal & translate LUT ================\n");
-	printf("Wanted precision : ");
-	scanf("%d", &precision);
+	printf(" Set a precision for cal & translate LUT ............ ");
+	
+	if(argc != 2) {
+		printf("[Fail]\n");
+		printf(" usage : test precision\n");
+		return 0;
+	}
+	else {
+		precision = atoi(argv[1]);
+		if(precision >= 25) {
+			printf("[Fail]\n");
+			printf(" 1 <= precision <= 25 \n");
+			return 0;
+		}
+
+		printf("[Pass]\n");
+		printf(" Precision : %d\n", precision);
+	}
 
 	for(i = 0; i < TABLE_LENGTH; i++) {
 		circular_table_fixed[i].index = circular_table[i].index;
-		circular_table_fixed[i].tangent =
-			float_to_fixed(circular_table[i].tangent, precision);
-		circular_table_fixed[i].angle =
-			float_to_fixed(circular_table[i].angle, precision);
-		circular_table_fixed[i].radian =
-			float_to_fixed(circular_table[i].radian, precision);
+		circular_table_fixed[i].tangent = float_to_fixed(circular_table[i].tangent, precision);
+		circular_table_fixed[i].angle = float_to_fixed(circular_table[i].angle, precision);
+		circular_table_fixed[i].radian = float_to_fixed(circular_table[i].radian, precision);
 
 		linear_table_fixed[i].index = linear_table[i].index;
-		linear_table_fixed[i].tangent =
-			float_to_fixed(linear_table[i].tangent, precision);
-		linear_table_fixed[i].angle =
-			float_to_fixed(linear_table[i].angle, precision);
-		linear_table_fixed[i].radian =
-			float_to_fixed(linear_table[i].radian, precision);
+		linear_table_fixed[i].tangent =	float_to_fixed(linear_table[i].tangent, precision);
+		linear_table_fixed[i].angle = float_to_fixed(linear_table[i].angle, precision);
+		linear_table_fixed[i].radian = float_to_fixed(linear_table[i].radian, precision);
 		
 		hyperbolic_table_fixed[i].index = hyperbolic_table[i].index;
-		hyperbolic_table_fixed[i].tangent =
-			float_to_fixed(hyperbolic_table[i].tangent, precision);
-		hyperbolic_table_fixed[i].angle =
-			float_to_fixed(hyperbolic_table[i].angle, precision);
-		hyperbolic_table_fixed[i].radian =
-			float_to_fixed(hyperbolic_table[i].radian, precision);
+		hyperbolic_table_fixed[i].tangent = float_to_fixed(hyperbolic_table[i].tangent, precision);
+		hyperbolic_table_fixed[i].angle = float_to_fixed(hyperbolic_table[i].angle, precision);
+		hyperbolic_table_fixed[i].radian = float_to_fixed(hyperbolic_table[i].radian, precision);
 	}
-		
 
-	printf("========= Test square root ===========\n");
-	for(i = 0; i < TEST_VECTOR_LENGTH; i++)
-	{
-	//	CORDIC_answer_vector_for_sqrt[i] = CORDIC_sqrt_float(test_vector_for_sqrt[i].x, test_vector_for_sqrt[i].y, precision);
+	printf(" Cal sol by CORDIC .................................. ");
+	for(i = 0; i < TEST_VECTOR_LENGTH; i++)	{
+		CORDIC_answer_vector_for_sqrt[i] = CORDIC_sqrt_float(test_vector_for_sqrt[i].x, test_vector_for_sqrt[i].y, precision);
 		CORDIC_answer_vector_for_cos[i] = CORDIC_cos_float(test_vector_for_tri[i], precision);
 		CORDIC_answer_vector_for_sin[i] = CORDIC_sin_float(test_vector_for_tri[i], precision);
 	}
+	printf("[Pass]\n");
 
-	printf("========= Verify test_vectors ====================\n");
+	printf(" Verify test_vectors ................................\n");
+
 	{
 		double sum_for_sqrt = 0;
 		double sum_for_cos = 0;
@@ -213,16 +220,16 @@ int main(void) {
 		std_cos = sqrt(sum_for_cos/TEST_VECTOR_LENGTH);
 		std_sin = sqrt(sum_for_sin/TEST_VECTOR_LENGTH);
 
-		printf("Standard deviation of sqrt : %lf \n", std_sqrt);
-		printf("Standard deviation of cos : %lf \n", std_cos);
-		printf("Standard deviation of sin : %lf \n", std_sin);
+		printf(" Standard deviation of sqrt : %lf \n", std_sqrt);
+		printf(" Standard deviation of cos : %lf \n", std_cos);
+		printf(" Standard deviation of sin : %lf \n", std_sin);
 
-/*
 		for(i = 0; i < TEST_VECTOR_LENGTH; i++)
 		{
+			printf("[%d : %lf]\n", i, answer_vector_for_sqrt[i] - CORDIC_answer_vector_for_sqrt[i]);
 			printf("[%d : %lf]\n", i, answer_vector_for_cos[i] - CORDIC_answer_vector_for_cos[i]);
+			printf("[%d : %lf]\n", i, answer_vector_for_sin[i] - CORDIC_answer_vector_for_sin[i]);
 		}
-*/
 	}
 	
 	return 0;
