@@ -1,11 +1,14 @@
 #ifndef __CORDIC_H__
 #define __CORDIC_H__
 
-#define CORDIC_cos_float(theta, precision)	CORDIC_tri_float(theta, precision, 0)
-#define CORDIC_sin_float(theta, precision)	CORDIC_tri_float(theta, precision, 1)
+#define CORDIC_cos(theta)			CORDIC_cos_sin(theta, 0)
+#define CORDIC_sin(theta)			CORDIC_cos_sin(theta, 1)
 
-double CORDIC_sqrt_float(double x, double y, int precision);
-double CORDIC_atan_float(double x, double y, int precision);
-double CORDIC_tri_float(double theta, int precision, int sel);
+FIXED CORDIC_cos_sin(FIXED theta, int sel);
+FIXED CORDIC_sqrt(FIXED x, FIXED y);
+FIXED CORDIC_atan(FIXED x, FIXED y);
+
+void make_fixed_table(void);
+void make_fixed_const(void);
 
 #endif
