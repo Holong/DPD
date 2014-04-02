@@ -159,6 +159,20 @@ FIXED CORDIC_cos_sin(FIXED theta, int precision, int sel)
 		return result.y;
 }
 
+FIXED CORDIC_atan(FIXED x, FIXED y, int precision)
+{
+	struct point pt0;
+	struct point result;
+
+	pt0.x = x;
+	pt0.y = y;
+	pt0.z = 0;
+	result = generalized_cordic(pt0, CIRCULAR, VECTORING, precision);
+
+	return result.z;
+}
+
+
 FIXED CORDIC_sqrt(FIXED x, FIXED y, int precision)
 {
 	struct point pt0;
@@ -183,6 +197,16 @@ double CORDIC_sqrt_float(double x, double y, int precision)
 	FIXED y_fix = float_to_fixed(y, precision);
 
 	FIXED ret_value = CORDIC_sqrt(x_fix, y_fix, precision);
+
+	return fixed_to_float(ret_value, precision);
+}
+
+double CORDIC_atan_float(double x, double y, int precision)
+{
+	FIXED x_fix = float_to_fixed(x, precision);
+	FIXED y_fix = float_to_fixed(y, precision);
+
+	FIXED ret_value = CORDIC_atan(x_fix, y_fix, precision);
 
 	return fixed_to_float(ret_value, precision);
 }

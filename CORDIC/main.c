@@ -149,6 +149,7 @@ int main(int argc, char* argv[]) {
 		double yy = pow(test_vector_for_sqrt[i].y, 2);
 
 		answer_vector_for_sqrt[i] = sqrt(xx + yy);
+		answer_vector_for_atan[i] = atan(test_vector_for_sqrt[i].y/test_vector_for_sqrt[i].x);
 		answer_vector_for_cos[i] = cos(test_vector_for_tri[i]);
 		answer_vector_for_sin[i] = sin(test_vector_for_tri[i]);
 	}
@@ -193,6 +194,7 @@ int main(int argc, char* argv[]) {
 	printf(" Cal sol by CORDIC .................................. ");
 	for(i = 0; i < TEST_VECTOR_LENGTH; i++)	{
 		CORDIC_answer_vector_for_sqrt[i] = CORDIC_sqrt_float(test_vector_for_sqrt[i].x, test_vector_for_sqrt[i].y, precision);
+		CORDIC_answer_vector_for_atan[i] = CORDIC_atan_float(test_vector_for_sqrt[i].x, test_vector_for_sqrt[i].y, precision);
 		CORDIC_answer_vector_for_cos[i] = CORDIC_cos_float(test_vector_for_tri[i], precision);
 		CORDIC_answer_vector_for_sin[i] = CORDIC_sin_float(test_vector_for_tri[i], precision);
 	}
@@ -202,34 +204,41 @@ int main(int argc, char* argv[]) {
 
 	{
 		double sum_for_sqrt = 0;
+		double sum_for_atan = 0;
 		double sum_for_cos = 0;
 		double sum_for_sin = 0;
 
 		double std_sqrt = 0;
+		double std_atan = 0;
 		double std_cos = 0;
 		double std_sin = 0;
 
 		for(i = 0; i < TEST_VECTOR_LENGTH; i++)
 		{
 			sum_for_sqrt += pow(answer_vector_for_sqrt[i] - CORDIC_answer_vector_for_sqrt[i], 2);
+			sum_for_atan += pow(answer_vector_for_atan[i] - CORDIC_answer_vector_for_atan[i], 2);
 			sum_for_cos += pow(answer_vector_for_cos[i] - CORDIC_answer_vector_for_cos[i], 2);
 			sum_for_sin += pow(answer_vector_for_sin[i] - CORDIC_answer_vector_for_sin[i], 2);
 		}
 
 		std_sqrt = sqrt(sum_for_sqrt/TEST_VECTOR_LENGTH);
+		std_atan = sqrt(sum_for_atan/TEST_VECTOR_LENGTH);
 		std_cos = sqrt(sum_for_cos/TEST_VECTOR_LENGTH);
 		std_sin = sqrt(sum_for_sin/TEST_VECTOR_LENGTH);
 
 		printf(" Standard deviation of sqrt : %lf \n", std_sqrt);
+		printf(" Standard deviation of atan : %lf \n", std_atan);
 		printf(" Standard deviation of cos : %lf \n", std_cos);
 		printf(" Standard deviation of sin : %lf \n", std_sin);
-
+/*
 		for(i = 0; i < TEST_VECTOR_LENGTH; i++)
 		{
 			printf("[%d : %lf]\n", i, answer_vector_for_sqrt[i] - CORDIC_answer_vector_for_sqrt[i]);
+			printf("[%d : %lf]\n", i, answer_vector_for_atan[i] - CORDIC_answer_vector_for_atan[i]);
 			printf("[%d : %lf]\n", i, answer_vector_for_cos[i] - CORDIC_answer_vector_for_cos[i]);
 			printf("[%d : %lf]\n", i, answer_vector_for_sin[i] - CORDIC_answer_vector_for_sin[i]);
 		}
+*/
 	}
 	
 	return 0;
