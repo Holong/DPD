@@ -12,3 +12,5 @@ CORDIC/Debug
 Makefile
 *.swp
 tags
+*.o
+test
