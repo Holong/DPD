@@ -86,5 +86,7 @@ int main(void) {
 		printf("Standard deviation of sin : %lf \n", std_sin);
 	}
 	
+	while(1);
+
 	return 0;
 }
