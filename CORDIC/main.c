@@ -8,6 +8,8 @@
 #include "cordic.h"
 #include "fixed.h"
 
+#define PRECISION		13
+
 struct rotation_info circular_table[TABLE_LENGTH] = {
 	{0,	1.000000000000000,	45.000000000000000,	0.785398163397448},
 	{1,	0.500000000000000,	26.565051177077990,	0.463647609000806},
@@ -156,14 +158,16 @@ int main(int argc, char* argv[]) {
 	printf("[Pass]\n");
 
 	printf(" Set a precision for cal & translate LUT ............ ");
-	
+
+	/*
 	if(argc != 2) {
 		printf("[Fail]\n");
 		printf(" usage : test precision\n");
 		return 0;
 	}
-	else {
-		precision = atoi(argv[1]);
+	*/
+//	else {
+		precision = PRECISION;
 		if(precision >= 25) {
 			printf("[Fail]\n");
 			printf(" 1 <= precision <= 25 \n");
@@ -172,7 +176,7 @@ int main(int argc, char* argv[]) {
 
 		printf("[Pass]\n");
 		printf(" Precision : %d\n", precision);
-	}
+//	}
 
 	for(i = 0; i < TABLE_LENGTH; i++) {
 		circular_table_fixed[i].index = circular_table[i].index;
