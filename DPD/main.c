@@ -5,11 +5,11 @@
 #include "cordic.h"
 #include "lookup.h"
 
-#define INPUT_LEN		100
+#define INPUT_LEN		10
 #define OUTPUT_LEN		INPUT_LEN
 
-extern double I_phase[INPUT_LEN];
-extern double Q_phase[INPUT_LEN];
+double I_phase[INPUT_LEN];
+double Q_phase[INPUT_LEN];
 
 extern FIXED K_FIXED;
 extern FIXED INV_K_FIXED;
@@ -79,6 +79,8 @@ int main(void)
 {
 	double ret_I_phase[OUTPUT_LEN];
 	double ret_Q_phase[OUTPUT_LEN];
+	double I_phase[INPUT_LEN] = {1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0};
+	double Q_phase[INPUT_LEN] = {1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0};
 	int i;
 
 	PRECISION = 13;
