@@ -21,6 +21,8 @@
 #define P4			1
 #define P5			1
 
+#define PI			3.141592653589
+#define HALF_PI			1.570796326794
 
 struct rotation_info {
 	int index;

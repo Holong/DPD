@@ -28,6 +28,9 @@ extern FIXED P3_FIXED;
 extern FIXED P4_FIXED;	
 extern FIXED P5_FIXED;	
 
+extern FIXED PI_FIXED;
+extern FIXED HALF_PI_FIXED;
+
 int PRECISION;
 
 void cal_dpd(FIXED amp, FIXED phase, FIXED *ret_amp, FIXED *ret_phase)

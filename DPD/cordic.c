@@ -143,6 +143,9 @@ FIXED P3_FIXED;
 FIXED P4_FIXED;	
 FIXED P5_FIXED;	
 
+FIXED PI_FIXED;
+FIXED HALF_PI_FIXED;
+
 extern int PRECISION;
 
 void make_fixed_table(void)
@@ -184,6 +187,9 @@ void make_fixed_const(void)
 	P3_FIXED = float_to_fixed(P3);
 	P4_FIXED = float_to_fixed(P4);
 	P5_FIXED = float_to_fixed(P5);
+	
+	PI_FIXED = float_to_fixed(PI);
+	HALF_PI_FIXED = float_to_fixed(HALF_PI);
 }
 
 int select_direction(mode cal_mode, struct point pt)
@@ -308,15 +314,32 @@ FIXED CORDIC_cos_sin(FIXED theta, int sel)
 {
 	struct point pt0;
 	struct point result;
+	int quadrant;
+
+	if(theta <= HALF_PI_FIXED && theta >= -1 * HALF_PI_FIXED) {
+		quadrant = 1;
+		pt0.z = theta;
+	}
+	else if(theta > HALF_PI_FIXED) {
+		quadrant = 2;
+		pt0.z = PI_FIXED - theta;
+	}
+	else {
+		quadrant = 3;
+		pt0.z = PI_FIXED + theta;
+	}
 
 	pt0.x = INV_K_FIXED;
 	pt0.y = 0;
-	pt0.z = theta;
 
 	result = generalized_cordic(pt0, CIRCULAR, ROTATION);
 
-	if(sel == 0)
+	if(sel == 0 && quadrant == 1)
 		return result.x;
+	else if(sel == 0 && quadrant != 1)
+		return -1 * result.x;
+	else if(sel != 0 && quadrant == 3)
+		return -1 * result.y;
 	else
 		return result.y;
 }
@@ -340,9 +363,17 @@ FIXED CORDIC_sqrt(FIXED x, FIXED y)
 	struct point pt0;
 	struct point result;
 
-	pt0.x = x;
-	pt0.y = y;
+	if(x > 0)
+		pt0.x = x;
+	else
+		pt0.x = -1 * x;
+
+	if(y > 0)
+		pt0.y = y;
+	else
+		pt0.y = -1 * y;
 	pt0.z = 0;
+
 	result = generalized_cordic(pt0, CIRCULAR, VECTORING);
 
 	return fixed_mul(INV_K_FIXED, result.x);
