@@ -345,10 +345,5 @@ FIXED CORDIC_sqrt(FIXED x, FIXED y)
 	pt0.z = 0;
 	result = generalized_cordic(pt0, CIRCULAR, VECTORING);
 
-	pt0.x = result.x;
-	pt0.y = 0;
-	pt0.z = INV_K_FIXED;
-	result = generalized_cordic(pt0, LINEAR, ROTATION);
-
-	return result.y;
+	return fixed_mul(INV_K_FIXED, result.x);
 }

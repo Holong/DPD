@@ -71,8 +71,8 @@ void dpd(double I, double Q, double* ret_I, double* ret_Q)
 
 	cal_dpd(before_DPD_amp, before_DPD_phase, &after_DPD_amp, &after_DPD_phase);
 
-	*ret_I = fixed_mul(before_DPD_amp, CORDIC_cos(before_DPD_phase));
-	*ret_Q = fixed_mul(before_DPD_amp, CORDIC_sin(before_DPD_phase));
+	*ret_I = fixed_to_float(fixed_mul(before_DPD_amp, CORDIC_cos(before_DPD_phase)));
+	*ret_Q = fixed_to_float(fixed_mul(before_DPD_amp, CORDIC_sin(before_DPD_phase)));
 }
 
 int main(void)
