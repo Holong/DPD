@@ -1,4 +1,3 @@
-#define PI			3.141592
 #define TEST_VECTOR_LENGTH	100
 
 struct rect {

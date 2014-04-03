@@ -126,14 +126,21 @@ int main(int argc, char* argv[]) {
 		double integer = rand()%10;
 		double fraction = rand()%10000;
 		double value = integer + fraction/10000;
+		int sign = rand()%2;
+
+		if(sign%2)
+			sign = 1;
+		else
+			sign = -1;
 		
 		if(i%2)
-			test_vector_for_sqrt[i/2].x = value;
+			test_vector_for_sqrt[i/2].x = sign * value;
 		else
-			test_vector_for_sqrt[i/2].y = value;
+			test_vector_for_sqrt[i/2].y = sign * value;
+
 	}
 	for(i = 0; i < TEST_VECTOR_LENGTH; i++)	{
-		int angle_int = rand()%90;
+		int angle_int = rand()%180;
 		double angle_deci = rand()%100 * 0.01;
 
 		double angle = (double)angle_int + angle_deci;

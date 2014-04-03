@@ -9,6 +9,9 @@
 #define PRI_K			0.828159360960
 #define INV_PRI_K		1.207497067763
 
+#define PI			3.141592653589
+#define HALF_PI			1.570796326794
+
 struct rotation_info {
 	int index;
 	double tangent;

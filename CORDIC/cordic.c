@@ -1,7 +1,6 @@
 #include "fixed.h"
 #include "lookup.h"
 
-
 struct point {
 	FIXED x;
 	FIXED y;
@@ -146,15 +145,34 @@ FIXED CORDIC_cos_sin(FIXED theta, int precision, int sel)
 {
 	struct point pt0;
 	struct point result;
+	int quadrant;
+	FIXED pi_fixed = float_to_fixed(PI, precision);
+	FIXED half_pi_fixed = float_to_fixed(HALF_PI, precision);
+
+	if(theta <= half_pi_fixed && theta >= -1 * half_pi_fixed) {
+		quadrant = 1;
+		pt0.z = theta;
+	}
+	else if(theta > half_pi_fixed) {
+		quadrant = 2;
+		pt0.z = pi_fixed - theta;
+	}
+	else {
+		quadrant = 3;
+		pt0.z = pi_fixed + theta;
+	}
 
 	pt0.x = float_to_fixed(INV_K, precision);
 	pt0.y = 0;
-	pt0.z = theta;
 
 	result = generalized_cordic(pt0, CIRCULAR, ROTATION, precision);
 
-	if(sel == 0)
+	if(sel == 0 && quadrant == 1)
 		return result.x;
+	else if(sel == 0 && quadrant != 1)
+		return -1 * result.x;
+	else if(sel != 0 && quadrant == 3)
+		return -1 * result.y;
 	else
 		return result.y;
 }
@@ -178,8 +196,15 @@ FIXED CORDIC_sqrt(FIXED x, FIXED y, int precision)
 	struct point pt0;
 	struct point result;
 
-	pt0.x = x;
-	pt0.y = y;
+	if(x > 0)
+		pt0.x = x;
+	else
+		pt0.x = -1 * x;
+
+	if(y > 0)
+		pt0.y = y;
+	else
+		pt0.y = -1 * y;
 	pt0.z = 0;
 	result = generalized_cordic(pt0, CIRCULAR, VECTORING, precision);
 
